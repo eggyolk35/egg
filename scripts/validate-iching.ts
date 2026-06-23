@@ -16,14 +16,19 @@ for (let i = 1; i <= 64; i++) if (!ids.has(i)) fail(`缺少卦序 ${i}`);
 const bitsSet = new Set(HEXAGRAMS.map((h) => h.lines.join("")));
 if (bitsSet.size !== 64) fail(`卦象去重后应为 64，实际 ${bitsSet.size}`);
 
-// 3) 卦辞、提要非空
+// 3) 卦辞、提要、爻辞完整性
 for (const h of HEXAGRAMS) {
   if (!h.judgment) fail(`${h.id} ${h.name} 缺卦辞`);
   if (!h.summary) fail(`${h.id} ${h.name} 缺提要`);
-  if (h.lineTexts.length !== 0 && h.lineTexts.length !== 6) {
-    fail(`${h.id} ${h.name} 爻辞数应为 0 或 6，实际 ${h.lineTexts.length}`);
+  if (h.lineTexts.length !== 6) {
+    fail(`${h.id} ${h.name} 爻辞数应为 6，实际 ${h.lineTexts.length}`);
   }
+  h.lineTexts.forEach((t, i) => {
+    if (!t.trim()) fail(`${h.id} ${h.name} 第${i + 1}爻爻辞为空`);
+  });
 }
+const withLines = HEXAGRAMS.filter((h) => h.lineTexts.length === 6).length;
+console.log(`爻辞完整的卦：${withLines} / 64`);
 
 // 4) 起卦引擎：跑 2000 次，统计 6/7/8/9 概率应接近 1:3:3:1
 const tally: Record<number, number> = { 6: 0, 7: 0, 8: 0, 9: 0 };
