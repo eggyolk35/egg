@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  --background: #12100e; /* 墨 */
+  --surface: #1b1814; /* 略浅的墨 */
+  --foreground: #ece6d6; /* 宣纸白 */
+  --muted: #a89c83; /* 淡墨 */
+  --gold: #c8a44d; /* 鎏金 */
+  --cinnabar: #b23a2e; /* 朱砂 */
+  --line: #3a342b; /* 描边 */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-cinnabar: var(--cinnabar);
+  --color-line: var(--line);
+  --font-serif: var(--font-serif-sc), "Songti SC", "STSong", "SimSun", serif;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top, #1d1a15 0%, var(--background) 60%);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-serif-sc), "Songti SC", "STSong", "SimSun", serif;
+}
+
+/* 竖排标题用 */
+.vertical-rl {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* 一爻：阳爻（整条）与阴爻（断开） */
+.yao {
+  display: flex;
+  gap: 0.5rem;
+  height: 0.85rem;
+  width: 100%;
+}
+.yao > span {
+  display: block;
+  height: 100%;
+  background: var(--foreground);
+  border-radius: 2px;
+}
+.yao-yang > span {
+  flex: 1 1 100%;
+}
+.yao-yin > span {
+  flex: 1 1 42%;
+}
+.yao-changing > span {
+  background: var(--cinnabar);
+  box-shadow: 0 0 10px rgba(178, 58, 46, 0.7);
+}
+
+@keyframes coin-flip {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(1080deg); }
+}
+.coin-spin {
+  animation: coin-flip 0.6s ease-out;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fade-up 0.5s ease-out both;
+}
