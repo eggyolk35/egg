@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { castReading, type Reading } from "@/lib/iching";
 import HexagramView from "./HexagramView";
 import ReadingResult from "./ReadingResult";
@@ -8,6 +9,24 @@ import ReadingResult from "./ReadingResult";
 type Phase = "idle" | "casting" | "done";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function saveReading(r: Reading, question: string): Promise<void> {
+  try {
+    await fetch("/api/readings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        lineKinds: r.lines.map((l) => l.kind),
+        primaryId: r.primary.id,
+        resultingId: r.resulting?.id ?? null,
+        changingPositions: r.changingPositions,
+      }),
+    });
+  } catch {
+    // 保存失败不影响主流程
+  }
+}
 
 export default function Divination() {
   const [phase, setPhase] = useState<Phase>("idle");
@@ -20,13 +39,14 @@ export default function Divination() {
     setReading(r);
     setRevealed(0);
     setPhase("casting");
-    // 逐爻揭示，自下而上，营造起卦节奏
     for (let i = 1; i <= 6; i++) {
       await sleep(650);
       setRevealed(i);
     }
     await sleep(500);
     setPhase("done");
+    // 异步保存，不阻塞 UI
+    saveReading(r, question);
   }
 
   function reset() {
@@ -95,12 +115,20 @@ export default function Divination() {
             </p>
           )}
           <ReadingResult reading={reading} />
-          <button
-            onClick={reset}
-            className="rounded-full border border-line px-8 py-2.5 tracking-widest text-muted transition hover:border-gold hover:text-gold"
-          >
-            再卜一卦
-          </button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button
+              onClick={reset}
+              className="rounded-full border border-line px-8 py-2.5 tracking-widest text-muted transition hover:border-gold hover:text-gold"
+            >
+              再卜一卦
+            </button>
+            <Link
+              href="/history"
+              className="rounded-full border border-line px-8 py-2.5 tracking-widest text-muted transition hover:border-gold hover:text-gold"
+            >
+              查看历史
+            </Link>
+          </div>
         </div>
       )}
     </div>

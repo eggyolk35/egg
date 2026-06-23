@@ -2,11 +2,8 @@ import Divination from "@/components/Divination";
 
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col items-center px-5 py-12 sm:py-16">
-      <header className="mb-12 flex flex-col items-center gap-3 text-center">
-        <h1 className="text-4xl font-bold tracking-[0.3em] text-gold sm:text-5xl">
-          周易卜卦
-        </h1>
+    <main className="flex flex-1 flex-col items-center px-5 py-10 sm:py-14">
+      <header className="mb-10 flex flex-col items-center gap-2 text-center">
         <p className="text-sm tracking-[0.4em] text-muted">六十四卦 · 在线起卦</p>
         <p className="mt-2 max-w-md text-sm leading-relaxed text-foreground/70">
           《周易》者，群经之首，大道之源。
